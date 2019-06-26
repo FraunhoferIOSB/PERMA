@@ -16,7 +16,7 @@ stages:
 jobs:
  include:
   - stage: compile
-    name: Build packend
+    name: Build backend
     script:
     - cd FROST-Client/FROST-Client-with_tasking_parameter_modelling/
     - mvn install
