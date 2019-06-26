@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -e
 
 # Requirements for running this script:
 #    docker, maven
@@ -8,7 +9,7 @@ frontendVersion="0.0.2-SNAPSHOT"
 cd FROST-Client/FROST-Client-with_tasking_parameter_modelling/
 mvn install
 cd ../../backend/
-./gradlew buildDockerImage--exclude-task test
+./gradlew buildDockerImage --exclude-task test
 cd ..
 
 

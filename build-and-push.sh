@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -e
 
 # Requirements for running this script:
 #    docker, maven
