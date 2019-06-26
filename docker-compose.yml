@@ -1,21 +1,21 @@
 version : '2'
 services:
     frontend:
-        image: perma-frontend
+        image: fraunhoferiosb/perma:frontend-latest
         ports:
             - "80:4200"
         environment:
             - BACKEND_URL=http://backend:8080
 
     backend:
-        image: perma-backend
+        image: fraunhoferiosb/perma:backend-latest
         environment:
             - ST_SERVER_URL=http://frost-server:8080/FROST-Server/v1.0/
         volumes:
             - backend_config:/tmp/config
 
     virtual-actuator-server:
-        image: perma-vas
+        image: fraunhoferiosb/perma:vas-latest
         environment:
             - VA_HTTP_SERVER=http://frost-server:8080/FROST-Server/v1.0/
             - VA_MQTT_SERVER=tcp://frost-server:1883
@@ -29,8 +29,8 @@ services:
     frost-server:
         image: fraunhoferiosb/frost-server:ActuatorRework-1.10-SNAPSHOT
         ports:
-            - "8080:8080"
-            - "1883:1883"
+            - 8080:8080
+            - 1883:1883
         environment:
           - serviceRootUrl=http://localhost:8080/FROST-Server
           - http_cors_enable=true

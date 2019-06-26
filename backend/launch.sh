@@ -20,4 +20,4 @@ else
 	fi
 fi
 
-java -jar "backend-0.0.1.jar"
+java -jar "backend.jar"

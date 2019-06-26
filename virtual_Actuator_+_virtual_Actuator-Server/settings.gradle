@@ -1,4 +1,4 @@
-rootProject.name = "virtual_actuator"
+rootProject.name = "virtual_Actuator_+_virtual_Actuator-Server"
 
 include 'virtual_actuator_app'
 include 'va_capability'

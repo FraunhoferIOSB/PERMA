@@ -1,0 +1,60 @@
+language: java
+
+install:
+ - cd virtual_Actuator_+_virtual_Actuator-Server/
+ - chmod +x gradlew
+ - cd ..
+ 
+stages:
+ - compile
+ 
+jobs:
+ include:
+  - stage: compile
+    script:
+    # build backend
+    - cd FROST-Client/FROST-Client-with_tasking_parameter_modelling/
+    - mvn install
+    - cd ../../backend/
+    - ./gradlew dockerPushImage --exclude-task test
+
+    
+  - stage: compile 
+    script:
+    # build virtual actuator + virtual actuator server
+    - cd FROST-Client/FROST-Client-without_tasking_parameter_modelling/
+    - mvn install
+    - cd ../../virtual_Actuator_+_virtual_Actuator-Server/
+    - ./gradlew installDist
+    - ./gradlew jar
+    - ./gradlew dockerPushImage
+    
+    
+  - stage: compile
+    env: 
+        - VERSION=0.0.2-SNAPSHOT
+    script:
+    # build frontend
+    - cd frontend/
+    - docker build -t fraunhoferiosb/perma:frontend-latest . 
+    - docker tag fraunhoferiosb/perma:frontend-latest fraunhoferiosb/perma:frontend-$VERSION
+    - docker tag fraunhoferiosb/perma:frontend-latest fraunhoferiosb/perma:frontend-$TRAVIS_COMMIT
+ 
+    - docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
+    - docker push fraunhoferiosb/perma:frontend-latest
+    - docker push fraunhoferiosb/perma:frontend-$VERSION
+    - docker push fraunhoferiosb/perma:frontend-$TRAVIS_COMMIT
+
+
+
+services:
+ - docker
+ 
+env:
+   global: 
+    # travis encrypt DOCKER_USERNAME=[username]
+    - secure: CN25S0ELs9oGl7Mw5pGpdqrWeVL1WbYR1Ke+wd0OJ8rH4fP7hMi1tHYk6IDvUwR/t3KEK98jE03XVH56u1y40no+E1JhWpWJ5jmzYUVsqoY3kukcmqovVve0pytZBWY88XxF1TZl+e7t616k1ElQUaYKCoDgrhKS5gO+6GH7cZWjxRXLYCw2sIVqbF5cHbA4ur4hCmvYzL8+ofnTVpoIuKy303ed6XbDckM63o9cDM9809TozqzyokOhLmd1n54M+Na7OQYSOkK1bj9cI0REJKmofZv+L02WxbOYjPpAHTMfjWTjL7ynVK3+6gG+mUd6BCeMrywLv6LEcmu4ZwcuAPVjWNQQwIs838IME4li6Pba5T4cJRpRGTgWd1DPjdKhLPzrt3y8QigcE+LADjNq1qDb7L8Kd+92f7S3gysP6DNWrGwe0kP4++3R0FrphgAXsO/0YEwMl6HvvkReLUQZkFj9ug8FGaM5sucd49Xc69Mrft/pZAEAmc4lfvcOq3JpgcaJEtLaH5yEYSDggGhsbNEKewpIPA2o9T5f1mBApEfRbzEv0794TW+XO97TSFfxPHVxXArU/BXnou6suP/dE2q6fjm6aYhq8WTykyKNtU1q+PtINNUBJYcBXm8lr7V3+PYWAZjR15tGYHi7ux5aHJlwXb6BQZhVCijeG6B56fg=
+    # travis encrypt DOCKER_PASSWORD=[ password]
+    - secure: YS2i6Fj9zRWzyCa4+iffUAhWN2WgSX+EExFUJNNPzORHAVHnn0CYMD/tRoCH7M6A8PnM21Q2NI/zEBSsZhXoP5/nB9JIOF3rc6j7r4gEdLwev0TIKwIbri8qp32+jJomN9QjcJOoFjESeTLMp0sNUFgBfpEAJBcNSWyZGoVbyTnaQ1XeF27IsSJElnlfI2AJQ9W8mZ4GMbm3+Fkn/m/CzO6BD4qflW3QBmNjSA+tcBTkuAf9Jd/ASl3PuJbZiwKIEZP06S820es8SJu0GhrXDSpAoIxIKFRx7XyG9le7pwT5GbqPFSHycif8og5/Y2/UPtOmGVr+fFakCDtTcJPJOVlt06eRF6zniT2TQxdxbHvPzdOqMHvANQV2ZTiOX3NA+QWnLsytpPzeNDaR268nSZDqIDL82AEW6rbkG+JEDWP3+1QJOp+tkEYB+RHrJijKTs9ZjgJOTk6kLwvO9OhlqWm2LIPaJzN8PUv8qryztp1cW834/rrC4l1+O2EJcNf6M/Qwb+rUJFYnpcHwoob6FKd2ZW/lxpxJMHxrQXtnK20fU9ijdrCZuZlBIxDG+jz0jGMtgNQRlA82HgEX2PNXv5mJSQ10rmY1UrocndDTROy+TVGTkM2N2h5ue4AhrpyZmffC9gtmihsDZX79FSk4iLm8FU7gZZ3gu5PHOEFHmB4=
+
+    

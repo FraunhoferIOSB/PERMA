@@ -1,7 +1,94 @@
-subprojects {
-    afterEvaluate {
-        repositories {
-            jcenter()
-        }
+buildscript {
+  repositories {
+	jcenter()
+    maven {
+      url "https://plugins.gradle.org/m2/"
     }
+	maven {
+		url "https://plugins.gradle.org/m2/"
+	}
+  }
+  dependencies {
+    classpath "com.bmuschko:gradle-docker-plugin:4.8.0"
+	classpath "gradle.plugin.com.palantir.gradle.gitversion:gradle-git-version:0.11.0"
+  }
+}
+
+plugins {
+    id 'distribution'
+}
+
+version = '0.0.2-SNAPSHOT'
+
+
+apply plugin: 'java'
+apply plugin: 'idea'
+apply plugin: 'application'
+mainClassName = ''
+apply plugin: com.bmuschko.gradle.docker.DockerRemoteApiPlugin
+apply plugin: "com.palantir.git-version"
+
+import com.bmuschko.gradle.docker.tasks.image.DockerBuildImage
+import com.bmuschko.gradle.docker.tasks.image.DockerPushImage
+
+def details = versionDetails()
+
+docker {
+    registryCredentials {
+		url = 'https://index.docker.io/v1/'
+        username = "$System.env.DOCKER_USERNAME"
+        password = "$System.env.DOCKER_PASSWORD"
+    }
+}
+
+task copyDockerFiles(type:Copy) {
+	dependsOn assemble, installDist, jar
+    group = "Docker"
+    description = "Copy Dockerfile and required data to build directory"
+
+    from("virtual_actuator_app/build/install") {
+        include "virtual_actuator_app/**"
+    }
+	from "va_capability_server/build/libs/va_capability_server.jar"
+	from "serverConfig-docker.json"
+    from "Dockerfile"
+    into { "${project.buildDir}/docker" }
+    exclude "**/*.yml"
+}
+
+
+
+
+task buildDockerImage(type: DockerBuildImage, dependsOn: 'copyDockerFiles') {
+	dependsOn 'copyDockerFiles'
+	
+    description = "Package application as Docker image"
+    group = "Docker"
+    inputDir = project.file("$buildDir/docker")
+    tags = ["fraunhoferiosb/perma:vas-${project.version}".toString(), "fraunhoferiosb/perma:vas-latest", "fraunhoferiosb/perma:vas-${details.gitHash}"]
+}
+
+task dockerPushLatestImage(type: DockerPushImage, dependsOn: 'buildDockerImage') {
+    group "docker"
+
+	imageName = "fraunhoferiosb/perma"
+	tag = "vas-latest"
+}
+
+task dockerPushCurrentVersionImage(type: DockerPushImage, dependsOn: 'buildDockerImage') {
+    group "docker"
+
+	imageName = "fraunhoferiosb/perma"
+	tag = "vas-$project.version"
+}
+
+task dockerPushHashImage(type: DockerPushImage, dependsOn: 'buildDockerImage') {
+    group "docker"
+
+	imageName = "fraunhoferiosb/perma"
+	tag = "vas-${details.gitHash}"
+}
+
+task dockerPushImage() {
+	dependsOn dockerPushLatestImage, dockerPushCurrentVersionImage, dockerPushHashImage
 }
