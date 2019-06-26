@@ -1,4 +1,5 @@
-# PERMA
+# PERMA [![Build Status](https://travis-ci.org/FraunhoferIOSB/PERMA.svg?branch=master)](https://travis-ci.org/FraunhoferIOSB/PERMA)
+
 A project that provides a platform to create and manage (virtual) actuators on a SensorThings-Server with the Actuator Extension.
 
 ## How to build
