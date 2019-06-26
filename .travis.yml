@@ -1,5 +1,10 @@
 language: java
 
+branches:
+  only:
+    - master
+    - "/^v[0-9]+\\.[0-9]+/"
+
 install:
  - cd virtual_Actuator_+_virtual_Actuator-Server/
  - chmod +x gradlew
@@ -11,17 +16,17 @@ stages:
 jobs:
  include:
   - stage: compile
+    name: Build packend
     script:
-    # build backend
     - cd FROST-Client/FROST-Client-with_tasking_parameter_modelling/
     - mvn install
     - cd ../../backend/
     - ./gradlew dockerPushImage --exclude-task test
 
     
-  - stage: compile 
+  - stage: compile
+    name: Build virtual actuator + virtual actuator server
     script:
-    # build virtual actuator + virtual actuator server
     - cd FROST-Client/FROST-Client-without_tasking_parameter_modelling/
     - mvn install
     - cd ../../virtual_Actuator_+_virtual_Actuator-Server/
@@ -31,10 +36,10 @@ jobs:
     
     
   - stage: compile
+    name: Build Frontend
     env: 
         - VERSION=0.0.2-SNAPSHOT
     script:
-    # build frontend
     - cd frontend/
     - docker build -t fraunhoferiosb/perma:frontend-latest . 
     - docker tag fraunhoferiosb/perma:frontend-latest fraunhoferiosb/perma:frontend-$VERSION
@@ -45,7 +50,9 @@ jobs:
     - docker push fraunhoferiosb/perma:frontend-$VERSION
     - docker push fraunhoferiosb/perma:frontend-$TRAVIS_COMMIT
 
-
+cache:
+  directories:
+  - '$HOME/.m2/repository'
 
 services:
  - docker
