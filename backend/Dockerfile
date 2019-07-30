@@ -3,9 +3,8 @@ VOLUME /tmp
 WORKDIR /tmp
 
 COPY /backend.jar .
-COPY /servers.json .
+COPY /servers.json ./config/
 COPY /upload-dir .
 COPY /launch.sh .
 
 CMD ./launch.sh
-#ENTRYPOINT ["java", "-jar", "backend.jar"]
