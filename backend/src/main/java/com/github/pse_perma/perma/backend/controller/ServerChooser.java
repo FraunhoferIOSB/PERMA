@@ -46,10 +46,10 @@ public class ServerChooser {
 				return;
 			}
 		} catch (IOException ioe) {
-			logger.error("JSON server file couldn't be created.");
+			logger.error("JSON server file couldn't be created.", ioe);
 			return;
 		} catch (SecurityException se) {
-			logger.error("No permission to create the JSON server file.");
+			logger.error("No permission to create the JSON server file.", se);
 			return;
 		}
 
