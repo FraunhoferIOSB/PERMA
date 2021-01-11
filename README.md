@@ -1,4 +1,4 @@
-# PERMA [![Build Status](https://travis-ci.org/FraunhoferIOSB/PERMA.svg?branch=master)](https://travis-ci.org/FraunhoferIOSB/PERMA) [![Codacy Badge](https://api.codacy.com/project/badge/Grade/5a8abcb51e6e4f1d8c5cdef59c0bacf9)](https://www.codacy.com/gh/FraunhoferIOSB/PERMA?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=FraunhoferIOSB/PERMA&amp;utm_campaign=Badge_Grade)
+# PERMA [![Build Status](https://api.travis-ci.com/FraunhoferIOSB/PERMA.svg?branch=master)](https://travis-ci.org/FraunhoferIOSB/PERMA) [![Codacy Badge](https://api.codacy.com/project/badge/Grade/5a8abcb51e6e4f1d8c5cdef59c0bacf9)](https://www.codacy.com/gh/FraunhoferIOSB/PERMA?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=FraunhoferIOSB/PERMA&amp;utm_campaign=Badge_Grade)
 
 A project that provides a platform to create and manage (virtual) actuators on a SensorThings-Server with the Actuator Extension.
 
