@@ -51,7 +51,7 @@ import com.bmuschko.gradle.docker.tasks.image.DockerBuildImage
 import com.bmuschko.gradle.docker.tasks.image.DockerPushImage
 
 dependencies {
-    implementation('de.fraunhofer.iosb.ilt:FROST-Client:0.20-SNAPSHOT')
+    implementation('de.fraunhofer.iosb.ilt:FROST-Client:0.34')
     implementation('org.springframework.boot:spring-boot-starter-data-rest')
     implementation('org.springframework.boot:spring-boot-starter-web')
     implementation('org.springframework.boot:spring-boot-starter-websocket')
