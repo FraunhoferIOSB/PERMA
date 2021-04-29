@@ -1,0 +1,26 @@
+version: 2
+updates:
+- package-ecosystem: gradle
+  directory: "/backend"
+  schedule:
+    interval: daily
+    time: "04:00"
+  open-pull-requests-limit: 10
+  ignore:
+  - dependency-name: net.minidev:json-smart
+    versions:
+    - 2.4.2
+    - 2.4.4
+    - 2.4.5
+  - dependency-name: org.springframework.boot:spring-boot-gradle-plugin
+    versions:
+    - 2.4.2
+    - 2.4.3
+    - 2.4.4
+  - dependency-name: org.testcontainers:testcontainers
+    versions:
+    - 1.15.1
+    - 1.15.2
+  - dependency-name: de.fraunhofer.iosb.ilt:FROST-Client
+    versions:
+    - "0.33"
